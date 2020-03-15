@@ -1,10 +1,14 @@
 package com.qiu.department.service;
 
 import com.qiu.department.entity.Repair;
+
 import java.util.List;
 
-
 public interface RepairService {
+
+    void updateStatus(Long id, int status);
+
+    List<Repair> getRepair(String studentName, String sno, String instituteName, String major, String room, Integer status, int page, int size);
 
     /**
      * 通过ID查询单条数据
@@ -18,7 +22,7 @@ public interface RepairService {
      * 查询多条数据
      *
      * @param offset 查询起始位置
-     * @param limit 查询条数
+     * @param limit  查询条数
      * @return 对象列表
      */
     List<Repair> queryAllByLimit(int offset, int limit);

@@ -13,14 +13,46 @@
         <result property="type" column="type" jdbcType="INTEGER"/>
         <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
         <result property="departmentId" column="department_id" jdbcType="INTEGER"/>
-        <result property="dormitoryName" column="dormitory_name" jdbcType="INTEGER"/>
-        <result property="collegeName" column="college_name" jdbcType="INTEGER"/>
+        <result property="room" column="room" jdbcType="VARCHAR"/>
+        <result property="instituteName" column="institute_name" jdbcType="VARCHAR"/>
+        <result property="authority" column="authority" jdbcType="VARCHAR"/>
+        <result property="major" column="major" jdbcType="VARCHAR"/>
+        <result property="roomBed" column="room_bed" jdbcType="INTEGER"/>
     </resultMap>
+
+    <insert id="insertUser">
+        insert into  t_user (password,username,sno,major,room,institute_name,department_id)
+        values (#{user.password},#{user.username},#{user.sno},#{user.major},#{user.room},#{user.instituteName},#{user.departmentId})
+    </insert>
+
+    <select id="queryByDepartment" resultType="com.qiu.department.entity.User">
+        select * from t_user where department_id=#{user.departmentId} and state = 0
+        <if test="user.room != null and user.room != ''">
+            and room like "%"#{user.room}"%"
+        </if>
+        <if test="user.username != null and user.username !=''">
+            and username like "%"#{user.username}"%"
+        </if>
+        <if test="user.sno != null and user.sno !=''">
+            and sno like "%"#{user.sno}"%"
+        </if>
+        <if test="user.instituteName != null and user.instituteName !=''">
+            and sno like "%"#{user.instituteName}"%"
+        </if>
+        <if test="user.major != null and user.major !=''">
+            and major like "%"#{user.major}"%"
+        </if>
+
+    </select>
+
+    <select id="queryByUsername" resultType="com.qiu.department.entity.User">
+        select * from t_user where username = #{username}
+    </select>
 
     <!--查询单个-->
     <select id="queryById" resultMap="UserMap">
         select
-          id, username, sno, password, state, create_time, phone, type, avatar, department_id, dormitory_name, college_name
+          id, username, sno, password, state, create_time, phone, type, avatar, department_id, room, institute_name, authority, major
         from department.t_user
         where id = #{id}
     </select>
@@ -28,7 +60,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="UserMap">
         select
-          id, username, sno, password, state, create_time, phone, type, avatar, department_id, dormitory_name, college_name
+          id, username, sno, password, state, create_time, phone, type, avatar, department_id, room, institute_name, authority, major
         from department.t_user
         limit #{offset}, #{limit}
     </select>
@@ -36,7 +68,8 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="UserMap">
         select
-          id, username, sno, password, state, create_time, phone, type, avatar, department_id, dormitory_name, college_name
+        id, username, sno, password, state, create_time, phone, type, avatar, department_id, room, institute_name,
+        authority, major
         from department.t_user
         <where>
             <if test="id != null">
@@ -69,19 +102,25 @@
             <if test="departmentId != null">
                 and department_id = #{departmentId}
             </if>
-            <if test="dormitoryName != null">
-                and dormitory_name = #{dormitoryName}
+            <if test="room != null and room != ''">
+                and room = #{room}
             </if>
-            <if test="collegeName != null">
-                and college_name = #{collegeName}
+            <if test="instituteName != null and instituteName != ''">
+                and institute_name = #{instituteName}
+            </if>
+            <if test="authority != null and authority != ''">
+                and authority = #{authority}
+            </if>
+            <if test="major != null and major != ''">
+                and major = #{major}
             </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into department.t_user(username, sno, password, state, create_time, phone, type, avatar, department_id, dormitory_name, college_name)
-        values (#{username}, #{sno}, #{password}, #{state}, #{createTime}, #{phone}, #{type}, #{avatar}, #{departmentId}, #{dormitoryName}, #{collegeName})
+        insert into department.t_user(username, sno, password, state, create_time, phone, type, avatar, department_id, room, institute_name, authority, major)
+        values (#{username}, #{sno}, #{password}, #{state}, #{createTime}, #{phone}, #{type}, #{avatar}, #{departmentId}, #{room}, #{instituteName}, #{authority}, #{major})
     </insert>
 
     <!--通过主键修改数据-->
@@ -115,19 +154,29 @@
             <if test="departmentId != null">
                 department_id = #{departmentId},
             </if>
-            <if test="dormitoryName != null">
-                dormitory_name = #{dormitoryName},
+            <if test="room != null and room != ''">
+                room = #{room},
             </if>
-            <if test="collegeName != null">
-                college_name = #{collegeName},
+            <if test="instituteName != null and instituteName != ''">
+                institute_name = #{instituteName},
+            </if>
+            <if test="authority != null and authority != ''">
+                authority = #{authority},
+            </if>
+            <if test="major != null and major != ''">
+                major = #{major},
             </if>
         </set>
         where id = #{id}
     </update>
 
-    <!--通过主键删除-->
-    <delete id="deleteById">
-        delete from department.t_user where id = #{id}
-    </delete>
+    <!--    &lt;!&ndash;通过主键删除&ndash;&gt;-->
+    <!--    <delete id="deleteById">-->
+    <!--        delete from department.t_user where id = #{id}-->
+    <!--    </delete>-->
+
+    <update id="deleteById">
+        update t_user set state = "-1" where id = #{id}
+    </update>
 
 </mapper>

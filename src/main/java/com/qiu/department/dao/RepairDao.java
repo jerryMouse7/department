@@ -2,10 +2,15 @@ package com.qiu.department.dao;
 
 import com.qiu.department.entity.Repair;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 
 public interface RepairDao {
+
+    void updateStatus(@Param("repairId") Long repairId, @Param("status") int status);
+
+    List<Repair> getRepair(@Param("repair") Repair repair, @Param("page") int page, @Param("size") int size);
 
     /**
      * 通过ID查询单条数据
@@ -19,7 +24,7 @@ public interface RepairDao {
      * 查询指定行数据
      *
      * @param offset 查询起始位置
-     * @param limit 查询条数
+     * @param limit  查询条数
      * @return 对象列表
      */
     List<Repair> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);

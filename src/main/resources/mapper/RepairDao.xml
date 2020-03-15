@@ -5,15 +5,51 @@
     <resultMap type="com.qiu.department.entity.Repair" id="RepairMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="sno" column="sno" jdbcType="VARCHAR"/>
+        <result property="room" column="room" jdbcType="VARCHAR"/>
         <result property="device" column="device" jdbcType="VARCHAR"/>
         <result property="reason" column="reason" jdbcType="VARCHAR"/>
         <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="departmentId" column="department_id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
+
+
+    <update id="updateStatus">
+        update t_repair set state=#{status} where id=#{repairId}
+    </update>
+    <select id="getRepair" resultType="com.qiu.department.entity.Repair">
+        select * from t_repair 
+        <where>
+            <if test="repair.username != null and repair.username != ''">
+                and username like "%"#{repair.username}"%"
+            </if>
+
+            <if test="repair.sno != null and repair.sno != ''">
+                and sno like "%"#{repair.sno}"%"
+            </if>
+
+            <if test="repair.instituteName != null and repair.instituteName != ''">
+                and institute_name like "%"#{repair.instituteName}"%"
+            </if>
+            <if test="repair.major != null and repair.major != ''">
+                and major like "%"#{repair.major}"%"
+            </if>
+
+            <if test="repair.room != null and repair.room != ''">
+                and room like "%"#{repair.room}"%"
+            </if>
+            <if test="repair.state != null and repair.state != ''">
+                and state = #{repair.state}
+            </if>
+        </where>
+    </select>
 
     <!--查询单个-->
     <select id="queryById" resultMap="RepairMap">
         select
-          id, user_id, device, reason, state
+          id, user_id, sno, room, device, reason, state, department_id, create_time, update_time
         from department.t_repair
         where id = #{id}
     </select>
@@ -21,7 +57,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="RepairMap">
         select
-          id, user_id, device, reason, state
+          id, user_id, sno, room, device, reason, state, department_id, create_time, update_time
         from department.t_repair
         limit #{offset}, #{limit}
     </select>
@@ -29,7 +65,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="RepairMap">
         select
-          id, user_id, device, reason, state
+          id, user_id, sno, room, device, reason, state, department_id, create_time, update_time
         from department.t_repair
         <where>
             <if test="id != null">
@@ -37,6 +73,12 @@
             </if>
             <if test="userId != null">
                 and user_id = #{userId}
+            </if>
+            <if test="sno != null and sno != ''">
+                and sno = #{sno}
+            </if>
+            <if test="room != null and room != ''">
+                and room = #{room}
             </if>
             <if test="device != null and device != ''">
                 and device = #{device}
@@ -47,13 +89,22 @@
             <if test="state != null">
                 and state = #{state}
             </if>
+            <if test="departmentId != null">
+                and department_id = #{departmentId}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into department.t_repair(user_id, device, reason, state)
-        values (#{userId}, #{device}, #{reason}, #{state})
+        insert into department.t_repair(user_id, sno, room, device, reason, state, department_id, create_time, update_time)
+        values (#{userId}, #{sno}, #{room}, #{device}, #{reason}, #{state}, #{departmentId}, #{createTime}, #{updateTime})
     </insert>
 
     <!--通过主键修改数据-->
@@ -63,6 +114,12 @@
             <if test="userId != null">
                 user_id = #{userId},
             </if>
+            <if test="sno != null and sno != ''">
+                sno = #{sno},
+            </if>
+            <if test="room != null and room != ''">
+                room = #{room},
+            </if>
             <if test="device != null and device != ''">
                 device = #{device},
             </if>
@@ -71,6 +128,15 @@
             </if>
             <if test="state != null">
                 state = #{state},
+            </if>
+            <if test="departmentId != null">
+                department_id = #{departmentId},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
             </if>
         </set>
         where id = #{id}

@@ -2,9 +2,15 @@ package com.qiu.department.dao;
 
 import com.qiu.department.entity.User;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface UserDao {
+
+
+    void insertUser(@Param("user") User user);
+
+    List<User> queryByDepartment(@Param("user") User user, @Param("page") int page, @Param("size") int size);
 
     /**
      * 通过ID查询单条数据
@@ -14,11 +20,13 @@ public interface UserDao {
      */
     User queryById(Long id);
 
+    User queryByUsername(@Param("username") String username);
+
     /**
      * 查询指定行数据
      *
      * @param offset 查询起始位置
-     * @param limit 查询条数
+     * @param limit  查询条数
      * @return 对象列表
      */
     List<User> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
@@ -54,6 +62,6 @@ public interface UserDao {
      * @param id 主键
      * @return 影响行数
      */
-    int deleteById(Long id);
+    int deleteById(@Param("id") Long id);
 
 }

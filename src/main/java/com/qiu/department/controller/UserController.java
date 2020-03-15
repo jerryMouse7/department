@@ -2,9 +2,13 @@ package com.qiu.department.controller;
 
 import com.qiu.department.entity.User;
 import com.qiu.department.service.UserService;
+import com.qiu.department.utils.Result;
+import com.qiu.department.utils.ResultUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("user")
@@ -24,6 +28,12 @@ public class UserController {
     @GetMapping("selectOne")
     public User selectOne(Long id) {
         return this.userService.queryById(id);
+    }
+
+    @GetMapping("/all")
+    public Result<User> selectAll(){
+        List<User> users =  userService.queryAllByLimit(0,10);
+        return ResultUtil.sucess(users);
     }
 
 }

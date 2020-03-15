@@ -14,6 +14,23 @@ public class RepairServiceImpl implements RepairService {
     @Resource
     private RepairDao repairDao;
 
+    @Override
+    public void updateStatus(Long id, int status) {
+        repairDao.updateStatus(id, status);
+    }
+
+    @Override
+    public List<Repair> getRepair(String studentName, String sno, String instituteName, String major, String room, Integer status, int page, int size) {
+        Repair repair = new Repair();
+        repair.setUsername(studentName);
+        repair.setSno(sno);
+        repair.setMajor(major);
+        repair.setInstituteName(instituteName);
+        repair.setRoom(room);
+        repair.setState(status);
+        return repairDao.getRepair(repair, page, size);
+    }
+
     /**
      * 通过ID查询单条数据
      *
@@ -29,7 +46,7 @@ public class RepairServiceImpl implements RepairService {
      * 查询多条数据
      *
      * @param offset 查询起始位置
-     * @param limit 查询条数
+     * @param limit  查询条数
      * @return 对象列表
      */
     @Override
