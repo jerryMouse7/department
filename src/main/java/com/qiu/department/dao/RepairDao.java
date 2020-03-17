@@ -44,7 +44,7 @@ public interface RepairDao {
      * @param repair 实例对象
      * @return 影响行数
      */
-    int insert(Repair repair);
+    int insert(@Param("repair") Repair repair);
 
     /**
      * 修改数据

@@ -5,6 +5,7 @@ import com.qiu.department.entity.JwtUser;
 import com.qiu.department.entity.LoginUser;
 import com.qiu.department.entity.User;
 import com.qiu.department.security.SecurityConstants;
+import com.qiu.department.service.UserService;
 import com.qiu.department.utils.JwtTokenUtil;
 import com.qiu.department.utils.JwtUtil;
 import com.qiu.department.utils.Result;
@@ -24,12 +25,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 
+    @Autowired
+    private UserService userService;
     private JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
     private ThreadLocal<Boolean> rememberMe = new ThreadLocal<>();
 //    @Autowired
@@ -51,6 +56,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
            String username = request.getParameter("username");
            String password = request.getParameter("password");
            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+//            User user = userService.queryByUsername(username);
+           Map<String,String> userDetails = new HashMap<>();
+//           userDetails.put("id",user.getId().toString());
+//           userDetails.put("username",user.getUsername());
+           usernamePasswordAuthenticationToken.setDetails(userDetails);
            setDetails(request, usernamePasswordAuthenticationToken);
            System.out.println(getAuthenticationManager());
            return authenticationManager.authenticate(usernamePasswordAuthenticationToken);

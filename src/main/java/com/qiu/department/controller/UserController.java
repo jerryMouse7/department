@@ -7,6 +7,7 @@ import com.qiu.department.utils.ResultUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -26,7 +27,8 @@ public class UserController {
      * @return 单条数据
      */
     @GetMapping("selectOne")
-    public User selectOne(Long id) {
+    public User selectOne(Long id, Principal principal) {
+        System.out.println(principal.getName());
         return this.userService.queryById(id);
     }
 

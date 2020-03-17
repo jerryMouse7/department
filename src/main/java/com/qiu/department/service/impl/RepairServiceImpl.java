@@ -6,6 +6,7 @@ import com.qiu.department.service.RepairService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -13,6 +14,20 @@ import java.util.List;
 public class RepairServiceImpl implements RepairService {
     @Resource
     private RepairDao repairDao;
+
+    @Override
+    public Integer addRepair(String username, String sno, Long deparmtentId, String room, String device, LocalDateTime createTime, String reason) {
+        Repair repair = new Repair();
+        repair.setUsername(username);
+        repair.setSno(sno);
+        repair.setDepartmentId(deparmtentId);
+        repair.setRoom(room);
+        repair.setReason(reason);
+        repair.setDevice(device);
+        repair.setCreateTime(createTime);
+        repair.setUpdateTime(createTime);
+        return repairDao.insert(repair);
+    }
 
     @Override
     public void updateStatus(Long id, int status) {

@@ -14,7 +14,7 @@ public class Result<T> {
 
     public Result(String msg){
         code = 200;
-        status = 1;
+        status = 200;
         this.msg = msg;
         data = null;
 

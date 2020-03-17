@@ -1,10 +1,14 @@
 package com.qiu.department.service;
 
 import com.qiu.department.entity.Repair;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RepairService {
+
+    Integer addRepair(String username, String sno, Long deparmtentId, String room, String device, LocalDateTime createTime, String reason);
 
     void updateStatus(Long id, int status);
 

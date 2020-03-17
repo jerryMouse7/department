@@ -4,9 +4,11 @@ import com.qiu.department.entity.Repair;
 import com.qiu.department.service.RepairService;
 import com.qiu.department.utils.Result;
 import com.qiu.department.utils.ResultUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +22,24 @@ public class RepairController {
     @Resource
     private RepairService repairService;
 
+    @PostMapping("")
+    public Result<String> addRepair(@RequestParam("username") String username,
+                                    @RequestParam("sno") String sno,
+                                    @RequestParam("departmentId") Long deparmtentId,
+                                    @RequestParam("room") String room,
+                                    @RequestParam("device") String device,
+                                    @RequestParam("createTime") LocalDateTime createTime,
+                                    @RequestParam("reason") String reason) {
+        Integer res = repairService.addRepair(username, sno, deparmtentId, room, device, createTime, reason);
+        if (res > 0) {
+            return ResultUtil.sucess("新增成功");
+        }
+        return ResultUtil.error("新增失败");
 
+    }
+
+
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("")
     public Result<Repair> getRepair(@RequestParam(value = "studentName", required = false) String studentName,
                                     @RequestParam(value = "sno", required = false) String sno,
@@ -45,6 +64,12 @@ public class RepairController {
         repairService.updateStatus(repairId, status);
         return ResultUtil.sucess("修改成功");
 
+    }
+
+    @DeleteMapping("")
+    public Result<String> deleteRepair(@RequestParam("id") Long id) {
+        repairService.deleteById(id);
+        return ResultUtil.sucess("删除成功");
     }
 
     /**
